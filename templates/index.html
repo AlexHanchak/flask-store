@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link type="text/css" href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet"/>
+    <meta charset="UTF-8">
+    <title>title</title>
+</head>
+<body>
+<form action="/" method="POST">
+    <label>
+        <input name="currency" type="number" placeholder="input sum" value="" required>
+    </label>
+    <label>
+        <select name="payway" required>
+            {% for pway in payway %}
+                <option>{{ pway }}</option>
+            {% endfor %}
+        </select>
+    </label>
+    <br>
+    <label for="abo"></label><textarea name="description" class="about" id="abo" rows="7" cols="40" aria-atomic="false" style="resize: none"
+                                       placeholder="description for obj" required></textarea>
+    <br>
+    <button>Оплатить</button>
+</form>
+</body>
+</html>

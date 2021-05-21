@@ -1,0 +1,94 @@
+Выставление счетов для оплаты - в валюте Piastix - bill
+
+URL: https://core.piastrix.com/bill/create
+Метод: POST
+Content-Type: application/json
+Обязательные параметры: shop_amount, shop_currency, shop_id, shop_order_id, payer_currency
+
+
+Пример запроса:
+{
+	"description": "Test Bill",
+	"payer_currency": 643,
+	"shop_amount": "23.15",
+	"shop_currency": 643,
+	"shop_id": "112",
+	"shop_order_id": 4239,
+	"sign": "ad7fbe8df102bc70e28deddba8b45bb3f4e6cafdaa69ad1ecc0e8b1d4e770575"
+}
+Где,
+
+Параметр
+Описание
+Формат
+shop_id
+идентификатор магазина в системе Piastrix
+5
+shop_amount
+сумма выставленного счета
+"1.00"
+shop_currency
+валюта выставленного счета (зачисления на магазин)
+643 - Российский рубль, 840 - Доллар США, 978 - Евро, 980 - Украинская гривна
+payer_currency
+валюта оплаты плетельщиком (валюта списания с плательщика в системе Piastrix, может отличаться от валюты магазина)
+643 - Российский рубль, 840 - Доллар США, 978 - Евро, 980 - Украинская гривна
+sign
+подпись
+a7f5bcbb774cea9d9886cbb3ce2f8731359e356a7d759437b4e9e31da1152109
+shop_order_id
+номер счета на стороне магазина, формат
+строка до 255 символов
+description
+описание выставленного счета (не обязательный параметр)
+
+payer_account
+email или номер счета плательщика на стороне платежной системы Piastrix (не обязательный параметр),
+support@piastrix.com или 201494711279
+
+
+ Пример ответа:
+{
+	"data": {
+		"created": "Wed, 06 Dec 2017 14:30:44 GMT",
+		"id": 25,
+		"lifetime": 43200,
+		"payer_account": null,
+		"payer_currency": 643,
+		"payer_price": 23.15,
+		"shop_amount": 23.15,
+		"shop_currency": 643,
+		"shop_id": 3,
+		"shop_order_id": 4239,
+		"shop_refund": 23.15,
+		"url": "https://wallet.piastrix.com/ru/bill/pay/WtvoXPzcphd"
+	},
+	"error_code": 0,
+	"message": "Ok",
+	"result": true
+}
+Где,
+
+data – информация по созданному счеты для оплаты
+id – уникальный идентификатор счета в системе Piastrix
+lifetime – время действия счета для оплаты, в минутах, по умолчанию: 43200 минут
+payer_account – аккаунт плательщика, которому выставлен счет для оплаты (если передавался в запросе)
+payer_currency – валюта, в которой должен оплатить счет плательщик
+payer_price – сумма, которую должен оплатить плательщик для погашения счета
+shop_currency – валюта счета, зачисления на магазина
+shop_amount – сумма счета, переданная магазином
+shop_id – идентификатор магазина
+shop_order_id – номер счета на стороне магазина
+url – URL на который можно перенаправить пользователя для оплаты счета.
+
+
+
+Пример ошибки при выставлении счета:
+{
+	"data": null,
+	"message": "invalid sign",
+	"error_code": 1,
+	"result": false
+}
+message – описание ошибки;
+error_code – код ошибки

@@ -1,0 +1,37 @@
+Выставление счета для других валют - invoice
+
+URL: https://core.piastrix.com/invoice/create
+Метод: POST, Content-Type = application/json
+Обязательные параметры: amount, currency, payway, shop_id, shop_order_id, sign
+
+
+data - source для отправки методом method параметров из data.
+method – метод оправки data на source, формат: POST, GET
+url – URL на который необходимо отправить data методом method
+id – уникальный идентификатор счета в системе Piastrix
+
+
+Для перенаправления клиента для оплаты выставленного счета, необходимо данную информацию использовать для генерации и подтверждения HTML-формы, например:
+
+<form method="GET" action="https://payeer.com/api/merchant/process.php">
+    <input name="lang" value="ru" />
+    <input name="m_curorderid" value="68685634"/>
+    <input name="m_historyid" value="558274963"/>
+    <input name="m_historytm" value="1525080667"/>
+    <input name="referer" value=" https://payeer.com/merchant/?m_historyid=558274963&m_historytm=1525080667&m_curorderid=68685634 &lang=ru"/>
+    <input type="submit"/>
+</form>
+
+Т.е. из ответа invoice необходимо сформировать форму, где method = method, action=url, input = параметры из data
+
+ Пример ошибки при выставлении инвойса:
+{
+	"data": null,
+	"error_code": 4,
+	"message": "Payer price amount is too small, min: 1.0",
+	"result": false
+}
+
+
+message – описание ошибки;
+error_code – код

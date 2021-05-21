@@ -1,0 +1,46 @@
+Выставление счета для оплаты через PAY
+Для перенаправления плательщика на страницу оплаты, необходимо сформировать и подтвердить HTML-форму.
+
+URL: https://pay.piastrix.com/ru/pay или https://pay.piastrix.com/en/pay
+ Метод: POST, GET
+
+Обязательные параметры: amount, currency, shop_id, shop_order_id
+
+Пример формирования подписи для запроса:
+keys_sorted = ['amount', 'currency', 'shop_id', 'shop_order_id']
+
+Строка для генерации sha256 хеша имеет вид:
+10.00:643:5:101SecretKey01
+
+HEX-представление хеша:
+ e4580435a252d61ef91b71cb23ed7bee4d77de94ced36411526d2ce3b66ada8f
+
+Пример HTML-формы:
+
+<form name="Pay" method="post" action="https://pay.piastrix.com/ru/pay" accept-charset="UTF-8"> <input type="hidden" name="amount" value="10.00"/> <input type="hidden" name="currency" value="643"/> <input type="hidden" name="shop_id" value="1"/> <input type="hidden" name="sign" value="2a966c9942652c115640f584b101f4124a8c44e9f119b449195beacf539e98b9"/> <input type="hidden" name="shop_order_id" value="101"/>
+<input type="submit"/> <input type="hidden" name="description" value="Test invoice"/> </form>
+
+
+
+Где,
+Параметр
+Описание
+Формат
+shop_id
+идентификатор магазина в системе Piastrix
+5
+amount
+сумма выставленного счета
+"1.00"
+currency
+валюта выставленного счета
+840 - Доллар США, 643 - Российский рублю, 978 - Евро
+description
+описание к выставленному счету
+
+shop_order_id
+номер счета на стороне магазина
+строка до 255 символов. В зависимости от настроек магазина, может проверяться на уникальность
+sign
+подпись, см. п. Правила формирования подписи (sign)
+
