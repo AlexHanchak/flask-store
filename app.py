@@ -26,16 +26,14 @@ def res(des, cur, payway):
                     "shop_order_id": 4239,
                     "payway": payway
                 }
-    hexn = [result['shop_amount'], ':', result['payer_currency'], result['payway'], result['shop_id'], result['shop_order_id'], secretKey]
-    strin = hexn
-    s = str(strin)
+    hexn = [str(result['shop_amount']), str(result['payer_currency']), str(result['payway']), str(result['shop_id']), str(result['shop_order_id'])]
+    hexsep = ':'.join(hexn)
+    var = hexsep + secretKey
+    s = str(var)
     encoded = s.encode()
     hexsha = hashlib.sha256(encoded)
     sa = hexsha.hexdigest()
     result['sign'] = sa
-    print("Hash Value : ", end="")
-    print(strin)
-    print("Hexadecimal equivalent: ", sa)
     return result
 
 
@@ -45,9 +43,9 @@ def index():
         if request.form['payway'] == 'EUR':
             s = res(request.form['description'], request.form['currency'], request.form['payway'])
             # Pay
-            print(s)
+            # print(s)
 
-            return render_template('index.html', s)
+            return render_template('index.html')
         if request.form['payway'] == 'USD':
             # Bill Piastrix
             print(request.form)
