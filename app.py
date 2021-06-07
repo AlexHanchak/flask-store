@@ -1,14 +1,12 @@
 from flask import Flask, render_template, request
+from dotenv import dotenv_values
 from flask_mysqldb import MySQL
 import hashlib
-
+import logging
 
 app = Flask(__name__)
 app.static_folder = 'static'
-app.config['MYSQl_HOST'] = 'localhost'
-app.config['MYSQl_USER'] = 'lex'
-app.config['MYSQl_PASSWORD'] = 'h4t8j6b2f5'
-app.config['MYSQl_DB'] = 'web_store'
+config = dotenv_values(".env")
 
 mysql = MySQL(app)
 
@@ -18,20 +16,21 @@ secretKey = 'SecretKey01'
 
 def res(des, cur, payway):
     result = {
-                    "description": des,
-                    "payer_currency": cur,
-                    "shop_amount": "23.15",
-                    "shop_currency": cur,
-                    "shop_id": "112",
-                    "shop_order_id": 4239,
-                    "payway": payway
-                }
-    hexn = [str(result['shop_amount']), str(result['payer_currency']), str(result['payway']), str(result['shop_id']), str(result['shop_order_id'])]
+        "description": des,
+        "payer_currency": int(643),
+        "shop_amount": 23.15,
+        "shop_currency": 643,
+        "shop_id": 112,
+        "shop_order_id": 4239,
+        "payway": payway
+    }
+    hexn = [str(result['shop_amount']), str(result['shop_currency']), str(result['shop_id']),
+            str(result['shop_order_id'])]
     hexsep = ':'.join(hexn)
     var = hexsep + secretKey
-    s = str(var)
-    encoded = s.encode()
+    encoded = var.encode()
     hexsha = hashlib.sha256(encoded)
+    print(var)
     sa = hexsha.hexdigest()
     result['sign'] = sa
     return result
@@ -42,13 +41,18 @@ def index():
     if request.method == 'POST':
         if request.form['payway'] == 'EUR':
             s = res(request.form['description'], request.form['currency'], request.form['payway'])
-            # Pay
-            # print(s)
-
-            return render_template('index.html')
+            # Pays
+            action = "https://pay.piastrix.com/en/pay"
+            return render_template('form.html', amount=s['shop_amount'], currency=s['shop_currency'],
+                                   shop_id=s['shop_id'], shop_order_id=s['shop_order_id'], sign=s['sign'],
+                                   description=s['description'], action=action)
         if request.form['payway'] == 'USD':
+            s = res(request.form['description'], request.form['currency'], request.form['payway'])
             # Bill Piastrix
-            print(request.form)
+            action = "https://core.piastrix.com/bill/create"
+            return render_template('form.html', amount=s['shop_amount'], currency=s['shop_currency'],
+                                   shop_id=s['shop_id'], shop_order_id=s['shop_order_id'], sign=s['sign'],
+                                   description=s['description'], payer_currency=s['payer_currency'], action=action)
         if request.form['payway'] == 'RUB':
             # Invoice
             print(request.form)
